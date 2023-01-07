@@ -1,1 +1,73 @@
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+
+function StudentListing() {
+  const [students, setStudents] = useState([]);
+  const history = useHistory();
+
+  useEffect(() => {
+    async function fetchStudents() {
+      const response = await fetch("/api/students");
+      const data = await response.json();
+      setStudents(data);
+    }
+    fetchStudents();
+  }, []);
+
+  function handleRowClick(id) {
+    history.push(`/students/${id}`);
+  }
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {students.map(student => (
+          <tr key={student.id} onClick={() => handleRowClick(student.id)}>
+            <td>{student.id}</td>
+            <td>{student.name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export default StudentListing;
+
+
+import React, { useState, useEffect } from "react";
+
+function StudentProfile({ id }) {
+  const [student, setStudent] = useState({});
+
+  useEffect(() => {
+    async function fetchStudent() {
+      const response = await fetch(`/api/students/${id}`);
+      const data = await response.json();
+      setStudent(data);
+    }
+    fetchStudent();
+  }, [id]);
+
+  return (
+    <div className="side-panel">
+      <h1>Student Profile</h1>
+      <p>ID: {student.id}</p>
+      <p>Name: {student.name}</p>
+    </div>
+  );
+}
+
+export default StudentProfile;
+
+.side-panel {
+  width: 50%;
+  float: right;
+}
 
