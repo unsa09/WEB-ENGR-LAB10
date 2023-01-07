@@ -1,1 +1,50 @@
+import React from "react";
+import StudentListing from "./StudentListing";
+
+function Shell() {
+  return (
+    <div>
+      <h1>University Management</h1>
+      <StudentListing />
+    </div>
+  );
+}
+
+export default Shell;
+
+import React, { useState, useEffect } from "react";
+
+function StudentListing() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    async function fetchStudents() {
+      const response = await fetch("/api/students");
+      const data = await response.json();
+      setStudents(data);
+    }
+    fetchStudents();
+  }, []);
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {students.map(student => (
+          <tr key={student.id}>
+            <td>{student.id}</td>
+            <td>{student.name}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export default StudentListing;
 
